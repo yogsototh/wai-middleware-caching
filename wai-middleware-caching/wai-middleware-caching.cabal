@@ -1,5 +1,5 @@
 name:                wai-middleware-caching
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            WAI Middleware to cache things
 description:         Please see README.md
 homepage:            http://github.com/yogsototh/wai-middleware-caching/tree/master/wai-middleware-caching#readme
