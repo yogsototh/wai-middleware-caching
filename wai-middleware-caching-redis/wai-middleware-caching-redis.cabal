@@ -18,12 +18,12 @@ library
   exposed-modules:     Network.Wai.Middleware.RedisCache
   build-depends:       base >= 4.7 && < 5
                      , wai-middleware-caching
-                     , hedis
+                     , hedis >= 0.6
                      , blaze-builder
                      , bytestring
                      , text
                      , http-types
-                     , wai
+                     , wai >= 3.0
   default-language:    Haskell2010
 
 test-suite wai-middleware-caching-redis-test
