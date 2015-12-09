@@ -81,7 +81,7 @@ lookupCacheF cacheContainer cacheKey = do
 respToCacheValue :: Response -> IO CacheValue
 respToCacheValue resp = do
   bodyLBS <- responseToLBS resp
-  return (CacheValue bodyLBS (("X-Cached","true"):responseHeaders resp) (responseStatus resp))
+  return (CacheValue bodyLBS (responseHeaders resp) (responseStatus resp))
 
 addToCacheF :: CacheContainer -> CacheKey -> CacheValue -> IO ()
 addToCacheF cc ckey resp = atomicModifyIORef' cc (\c -> (LRU.insert ckey resp c,()))

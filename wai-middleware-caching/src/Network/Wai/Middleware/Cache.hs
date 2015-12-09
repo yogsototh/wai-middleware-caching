@@ -12,7 +12,8 @@ import qualified Data.ByteString.Char8    as S8
 import qualified Data.ByteString.Lazy     as LZ
 import           Data.IORef
 import           Network.Wai              (Middleware, Request, Response,
-                                           requestBody, responseToStream)
+                                           requestBody, responseToStream,
+                                           mapResponseHeaders)
 
 --------------------------------------------------------------------------------
 -- | The data structure that should contains everything you need to create
@@ -66,6 +67,9 @@ cacheNoBody cb app req sendResponse = do
          (respondFromCache cb sendResponse req)
          found
 
+addXCacheHeader :: Response -> Response
+addXCacheHeader = mapResponseHeaders (("X-Cached","true"):)
+
 respondFromCache :: CacheBackend cc ck cv
                  -> (Response -> IO b)
                  -> Request
@@ -74,7 +78,7 @@ respondFromCache :: CacheBackend cc ck cv
 respondFromCache cb sendResponse r cachedVal = do
   let response = cacheValToResponse cb cachedVal
   actionOnCache cb r response
-  sendResponse response
+  sendResponse (addXCacheHeader response)
 
 addToCacheAndRespond :: CacheBackend cc ck cv
                      -> (Response -> IO b)

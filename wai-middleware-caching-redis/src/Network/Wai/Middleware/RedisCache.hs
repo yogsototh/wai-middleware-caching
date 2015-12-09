@@ -80,7 +80,7 @@ defaultCacheBackend = newCacheBackend Nothing
 respToCacheValue :: Response -> IO CacheValue
 respToCacheValue resp = do
   bodyLBS <- responseToLBS resp
-  return (CacheValue bodyLBS (("X-Cached","true"):responseHeaders resp) (responseStatus resp))
+  return (CacheValue bodyLBS (responseHeaders resp) (responseStatus resp))
 
 
 keyFromReqF :: Request -> ByteString -> IO CacheKey
