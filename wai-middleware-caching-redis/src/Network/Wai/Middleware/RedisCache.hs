@@ -5,6 +5,9 @@ module Network.Wai.Middleware.RedisCache
     , cacheNoBody
     , newCacheBackend
     , defaultCacheBackend
+    , defaultConnectInfo
+    , ConnectInfo(..)
+    , PortID (..)
     ) where
 
 import Network.Wai.Middleware.Cache (CacheBackend(..))
@@ -17,7 +20,7 @@ import qualified Data.ByteString.Char8     as S8
 import qualified Data.ByteString.Lazy      as LZ
 import           Data.IORef
 import           Data.Text                 (Text)
-import           Database.Redis            (ConnectInfo, Connection, connect,
+import           Database.Redis            (ConnectInfo(..), Connection, PortID(..), connect,
                                             get, runRedis, set, defaultConnectInfo)
 import           Network.HTTP.Types.Header (ResponseHeaders)
 import           Network.HTTP.Types.Status (Status (..))
@@ -44,13 +47,10 @@ data CacheValue = CacheValue { _body    :: LZ.ByteString
 type CacheContainer = Connection
 type RedisCacheBackend = CacheBackend CacheContainer CacheKey CacheValue
 
-newCacheContainer :: Maybe ConnectInfo -> IO CacheContainer
-newCacheContainer m_info = case m_info of
-  Nothing -> connect defaultConnectInfo
-  Just info -> connect info
+newCacheContainer :: ConnectInfo -> IO CacheContainer
+newCacheContainer = connect
 
-
-newCacheBackend :: Maybe ConnectInfo
+newCacheBackend :: ConnectInfo
                 -> (Request -> ByteString -> IO Bool)
                 -> (Request -> Response -> IO ())
                 -> (Request -> Response -> IO ())
@@ -72,7 +72,7 @@ newCacheBackend connectInfo toCacheF actionOnCacheF actionOnCacheMissF = do
 -- | Cache Backend which cache all GET requests using local redis on standard port
 -- You should use `cacheNoBody` instead of `cache`
 defaultCacheBackend :: IO RedisCacheBackend
-defaultCacheBackend = newCacheBackend Nothing
+defaultCacheBackend = newCacheBackend defaultConnectInfo
                                       (\r _ -> return (requestMethod r == "GET"))
                                       (\_ _ -> return ())
                                       (\_ _ -> return ())

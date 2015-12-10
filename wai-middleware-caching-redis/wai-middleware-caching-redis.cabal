@@ -1,5 +1,5 @@
 name:                wai-middleware-caching-redis
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Cache Wai Middleware using Redis backend
 description:         Please see README.md
 homepage:            http://github.com/yogsototh/wai-middleware-caching/tree/master/wai-middleware-caching-redis#readme
