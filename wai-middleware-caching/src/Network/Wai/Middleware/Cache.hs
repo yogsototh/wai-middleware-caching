@@ -13,7 +13,8 @@ import qualified Data.ByteString.Lazy     as LZ
 import           Data.IORef
 import           Network.Wai              (Middleware, Request, Response,
                                            requestBody, responseToStream,
-                                           mapResponseHeaders)
+                                           responseStatus, mapResponseHeaders)
+import Network.HTTP.Types.Status (statusCode)
 
 --------------------------------------------------------------------------------
 -- | The data structure that should contains everything you need to create
@@ -87,10 +88,15 @@ addToCacheAndRespond :: CacheBackend cc ck cv
                      -> Response
                      -> IO b
 addToCacheAndRespond cb sendResponse req key r = do
-  cacheVal <- responseToCacheVal cb r
-  addToCache cb (cacheContainer cb) key cacheVal
-  actionOnCacheMiss cb req r
-  sendResponse (cacheValToResponse cb cacheVal)
+  let code = statusCode (responseStatus r)
+  if (code >= 200) && (code < 400)
+    then do
+      cacheVal <- responseToCacheVal cb r
+      addToCache cb (cacheContainer cb) key cacheVal
+      actionOnCacheMiss cb req r
+      sendResponse (cacheValToResponse cb cacheVal)
+    else
+      sendResponse r
 
 getRequestBody :: Request -> IO (Request, S8.ByteString)
 getRequestBody req = do
