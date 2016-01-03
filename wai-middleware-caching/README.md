@@ -1,4 +1,6 @@
-# Caching WAI Middleware
+# WAI Middleware Caching
+
+[<img alt="Hackage" src="https://img.shields.io/hackage/v/wai-middleware-caching.svg"/>](http://hackage.haskell.org/package/wai-middleware-caching)
 
 This is a base to create caching WAI Middlewares
 
