@@ -1,5 +1,5 @@
 name:                wai-middleware-caching
-version:             0.1.0.1
+version:             0.1.0.2
 synopsis:            WAI Middleware to cache things
 description:         Please see README.md
 homepage:            http://github.com/yogsototh/wai-middleware-caching/tree/master/wai-middleware-caching#readme
@@ -20,6 +20,7 @@ library
                      , blaze-builder
                      , bytestring
                      , wai >= 3.0
+                     , http-types
   default-language:    Haskell2010
 
 test-suite wai-middleware-caching-test
